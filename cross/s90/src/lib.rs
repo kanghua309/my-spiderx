@@ -170,3 +170,8 @@
 //         assert_eq!(super::compute_crc(&[0xBE, 0xEF]), 0x92);
 //     }
 // }
+
+#[rustfmt::skip]
+#[cfg(test)]
+#[path = "./test.rs"]
+mod test;
