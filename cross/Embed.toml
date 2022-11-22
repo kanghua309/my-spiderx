@@ -1,0 +1,15 @@
+[default.general]
+chip = "nrf52833_xxAA" # uncomment this line for micro:bit V2
+# chip = "nrf51822_xxAA" # uncomment this line for micro:bit V1
+
+[default.reset]
+halt_afterwards = false
+
+[default.rtt]
+enabled = true
+channels = [
+    { up = 0, name = "defmt_rtt", format = "Defmt" },
+]
+
+[default.gdb]
+enabled = false

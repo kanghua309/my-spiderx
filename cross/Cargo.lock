@@ -12,20 +12,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "aligned"
-version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c19796bd8d477f1a9d4ac2465b464a8b1359474f06a96bb3cda650b4fca309bf"
-dependencies = [
- "as-slice",
-]
-
-[[package]]
 name = "app"
 version = "0.1.0"
 dependencies = [
  "board",
- "cortex-m 0.7.6",
+ "cortex-m",
  "cortex-m-rt",
  "defmt",
  "defmt-rtt",
@@ -85,7 +76,7 @@ checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 name = "board"
 version = "0.1.0"
 dependencies = [
- "cortex-m 0.7.6",
+ "cortex-m",
  "cortex-m-rt",
  "defmt",
  "microbit-v2",
@@ -109,19 +100,6 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
-name = "cortex-m"
-version = "0.6.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9075300b07c6a56263b9b582c214d0ff037b00d45ec9fde1cc711490c56f1bb9"
-dependencies = [
- "aligned",
- "bare-metal 0.2.5",
- "bitfield",
- "cortex-m 0.7.6",
- "volatile-register",
-]
 
 [[package]]
 name = "cortex-m"
@@ -169,7 +147,7 @@ checksum = "95da181745b56d4bd339530ec393508910c909c784e8962d15d722bacf0bcbcd"
 dependencies = [
  "bare-metal 1.0.0",
  "cfg-if",
- "cortex-m 0.7.6",
+ "cortex-m",
  "riscv",
 ]
 
@@ -218,7 +196,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4df24f1ca104a0c1bce2047d8a21aa9fa29695e5d662118eb48daedb97edca88"
 dependencies = [
- "cortex-m 0.7.6",
+ "cortex-m",
  "cortex-m-rt",
  "defmt",
  "defmt-test-macros",
@@ -404,7 +382,7 @@ checksum = "bd37b3fd039327b4005cc0d4ef20bce0a41bf521071774d5adb854e4b1230639"
 dependencies = [
  "cast",
  "cfg-if",
- "cortex-m 0.7.6",
+ "cortex-m",
  "embedded-dma",
  "embedded-hal",
  "embedded-storage",
@@ -423,7 +401,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "640e88d4c108743c667f03320d0c9ab24a20f183a7a1b18bde7891ee13fd92c5"
 dependencies = [
  "bare-metal 1.0.0",
- "cortex-m 0.7.6",
+ "cortex-m",
  "critical-section",
  "usb-device",
  "vcell",
@@ -446,7 +424,7 @@ version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cd69bdb25903e18e098c040ef31dc863814437af010dea8bd55aa31f686cb461"
 dependencies = [
- "cortex-m 0.7.6",
+ "cortex-m",
  "cortex-m-rt",
  "vcell",
 ]
@@ -457,7 +435,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ab1f00eac22bd18f8e5cae9555f2820b3a0c166b5b556ee3e203746ea6dcf3a"
 dependencies = [
- "cortex-m 0.7.6",
+ "cortex-m",
  "defmt",
 ]
 
@@ -588,7 +566,7 @@ name = "self-tests"
 version = "0.1.0"
 dependencies = [
  "board",
- "cortex-m 0.6.7",
+ "cortex-m",
  "defmt",
  "defmt-rtt",
  "defmt-test",

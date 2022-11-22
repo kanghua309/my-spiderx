@@ -23,6 +23,11 @@ use microbit::{
 #[cortex_m_rt::entry]
 fn main() -> ! {
     defmt::println!("Hello, world!");
+    defmt::println!("Hello, world!");
+    defmt::println!("Hello, world!");
+    defmt::println!("Hello, world!");
+    defmt::println!("Hello, world2!");
+
     loop{}
 }
 
