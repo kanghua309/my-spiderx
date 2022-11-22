@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "host-target-tests",
+  "messages",
+  "xtask",
+]

@@ -1,0 +1,28 @@
+[package]
+name = "board"
+version = "0.1.0"
+authors = ["kanghua <kanghua151@msn.com>"]
+edition = "2018"
+
+# makes `cargo check --all-targets` (used by Rust-Analyzer) work
+[lib]
+bench = false
+doctest = false
+test = false
+
+[dependencies]
+microbit-v2 = "0.12.0"
+cortex-m = "0.7.3"
+cortex-m-rt = "0.7.0"
+defmt = "0.3.0"
+#nrf52840-hal = "0.12.0"
+s90 = { path = "../s90" }
+
+[features]
+# these features are required by defmt
+defmt-default = []
+defmt-trace = []
+defmt-debug = []
+defmt-info = []
+defmt-warn = []
+defmt-error = []
