@@ -13,8 +13,7 @@ use panic_probe as _;
 // use rtic::cyccnt::U32Ext;
 
 use cortex_m_rt::entry;
-//use rtt_target::{rtt_init_print, rprintln};
-//use panic_rtt_target as _;
+
 use microbit::{
     board::Board,
     display::blocking::Display,
