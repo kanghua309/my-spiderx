@@ -1,5 +1,109 @@
 #![cfg_attr(not(test), no_std)]
-//
+
+use core::marker::PhantomData;
+use embedded_hal::Pwm;
+use embedded_hal::digital::v2::OutputPin;
+
+// pub enum Channel {
+//     C0,
+//     C1,
+//     C2,
+//     C3,
+// }
+
+#[derive(Debug)]
+pub enum DriverError {
+    PwmError,
+    UnknownError,
+}
+
+pub struct Degrees(pub f64);
+pub trait F64Ext {
+    fn degrees(self) -> Degrees;
+}
+impl F64Ext for f64 {
+    fn degrees(self) -> Degrees {
+        if self > 180.0 || self < 0.0 {
+            panic!("Invalid angle");
+        }
+        Degrees(self)
+    }
+}
+
+pub trait Servo {
+    fn read(&self) -> Degrees;
+    fn write(&mut self, degrees: Degrees) -> ();
+}
+
+pub struct S90<PWM,CH>{
+    //pin: PIN,
+    pwm: PWM,
+    //_mark: PhantomData<C>,
+    chan:CH,
+    duty_at_0_degrees: u16,
+    duty_at_180_degrees: u16,
+}
+
+
+impl <PWM,CH> S90<PWM,CH>
+    where
+    //PIN: embedded_hal::digital::v2::OutputPin,
+    PWM: embedded_hal::Pwm<Channel=CH, Duty=u16>,
+    CH: Copy,
+{
+    pub fn new(pwm:PWM, chan:CH) -> Result<Self, DriverError> {
+        let driver = S90 {pwm, chan, duty_at_0_degrees: 3277, duty_at_180_degrees: 6554};
+        Ok(driver)
+    }
+}
+
+impl<PWM,CH> Servo for S90<PWM,CH>
+    where
+    //PIN: OutputPin,
+    PWM: Pwm<Channel=CH, Duty=u16>,
+    CH: Copy,
+{
+    fn read(&self) -> Degrees {
+        duty_to_degrees(
+            self.duty_at_0_degrees,
+            self.duty_at_180_degrees,
+            self.pwm.get_duty(self.chan)
+        )
+    }
+
+    fn write(&mut self, degrees: Degrees) -> () {
+        self.pwm.set_duty(self.chan,degrees_to_duty(
+            self.duty_at_0_degrees,
+            self.duty_at_180_degrees,
+            degrees,
+        ))
+    }
+}
+
+pub fn degrees_to_duty(
+    duty_at_0_degrees: u16,
+    duty_at_180_degrees: u16,
+    degrees: Degrees,
+) -> u16 {
+    (duty_at_0_degrees as f64
+        + ((degrees.0 / 180.0)
+        * (duty_at_180_degrees - duty_at_0_degrees) as f64)) as u16
+}
+
+pub fn duty_to_degrees(
+    duty_at_0_degrees: u16,
+    duty_at_180_degrees: u16,
+    duty: u16,
+) -> Degrees {
+    Degrees(
+        ((duty - duty_at_0_degrees) as f64
+            / (duty_at_180_degrees - duty_at_0_degrees) as f64)
+            * 180.0,
+    )
+}
+
+
+
 // use crc_any::CRCu8;
 // use defmt::Format;
 // use embedded_hal::blocking::i2c;

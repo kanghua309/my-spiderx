@@ -24,10 +24,6 @@ use microbit::{
 fn main() -> ! {
     defmt::println!("Hello, world!");
     defmt::println!("Hello, world!");
-    defmt::println!("Hello, world!");
-    defmt::println!("Hello, world!");
-    defmt::println!("Hello, world2!");
-
     loop{}
 }
 

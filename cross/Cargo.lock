@@ -565,12 +565,15 @@ dependencies = [
 name = "self-tests"
 version = "0.1.0"
 dependencies = [
- "board",
  "cortex-m",
+ "cortex-m-rt",
  "defmt",
  "defmt-rtt",
  "defmt-test",
+ "embedded-hal",
+ "microbit-v2",
  "panic-probe",
+ "s90",
 ]
 
 [[package]]
