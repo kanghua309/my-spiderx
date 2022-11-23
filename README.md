@@ -2,7 +2,7 @@
 
 脚手架是为嵌入程序所设计框架！！！
 满足功能：
-- 支持logging（借助defmt）
+- 支持logging（借助defmt） #见 https://defmt.ferrous-systems.com/istr.html
 - 支持no_std下的单元测试（借助 defmt-test 框架）
 - 支持cargo embed （见enbed.toml），会自动建立 GDB stub）
 - 支持splitable 方式的管理多包架构（见https://ferrous-systems.com/blog/test-embedded-app/）
