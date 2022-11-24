@@ -49,50 +49,47 @@ mod tests {
             // output the waveform on the speaker pin
             .set_output_pin(pwm::Channel::C0, pin.degrade())
             // Use prescale by 16 to achive darker sounds
-            .set_prescaler(pwm::Prescaler::Div4)
+            .set_prescaler(pwm::Prescaler::Div64)
             // Initial frequency
-            .set_period(Hertz(1u32))
+            .set_period(Hertz(500u32))
             // Configure for up and down counter mode
-            .set_counter_mode(pwm::CounterMode::UpAndDown)
+            //.set_counter_mode(pwm::CounterMode::UpAndDown)
             // Set maximum duty cycle
-            .set_max_duty(6554)
+            //.set_max_duty(6554)
             // enable PWM
             .enable();
-        pwm
-            .set_seq_refresh(pwm::Seq::Seq0, 0)
-            .set_seq_end_delay(pwm::Seq::Seq0, 0);
+        // pwm
+        //     .set_seq_refresh(pwm::Seq::Seq0, 0)
+        //     .set_seq_end_delay(pwm::Seq::Seq0, 0);
         pwm
     }
 
     #[test]
     fn simple_set_duty(pwm: &mut impl Pwm<Duty = u16,Channel = pwm::Channel>) {
         defmt::println!("simple_set_duty");
-        //let mut timer = Timer::new(board.TIMER0);
-        loop{
-            defmt::println!("loop");
-            //timer.delay_ms(1000u32);
-            pwm.set_duty(pwm::Channel::C0,3277);
-            //timer.delay_ms(1000u32);
-            //pwm.set_duty(pwm::Channel::C0,6554);
-            let duty = pwm.get_duty(pwm::Channel::C0);
-            defmt::println!("?{}",duty);
-        }
+        defmt::println!("max duty {}",pwm.get_max_duty());
+        assert_eq!(500,pwm.get_max_duty());
         // const EXPECTED: [u8; 2] = [3, 66];
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+
         // assert_eq!(EXPECTED, board.scd30.get_firmware_version().unwrap())
-        //pwm.set_duty(pwm::Channel::C0,3277);
+        pwm.set_duty(pwm::Channel::C0,50);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        pwm.set_duty(pwm::Channel::C0,150);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        pwm.set_duty(pwm::Channel::C0,200);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        pwm.set_duty(pwm::Channel::C0,250);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        pwm.set_duty(pwm::Channel::C0,300);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        pwm.set_duty(pwm::Channel::C0,400);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        pwm.set_duty(pwm::Channel::C0,500);
+        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
         //let duty = pwm.get_duty(pwm::Channel::C0);
         //assert_eq!(3277,duty);
     }
-
-    // #[test]
-    // fn simple_rotate(pwm: &mut impl Pwm<Duty = u16,Channel = pwm::Channel>) {
-    //     defmt::println!("simple_rotate");
-    //     // const EXPECTED: [u8; 2] = [3, 66];
-    //     // assert_eq!(EXPECTED, board.scd30.get_firmware_version().unwrap())
-    //     pwm.set_duty(pwm::Channel::C0,3277);
-    //     let duty = pwm.get_duty(pwm::Channel::C0);
-    //     assert_eq!(3277,duty);
-    // }
 }
 //
 // #[defmt_test::tests]

@@ -39,7 +39,7 @@ fn main() -> ! {
     defmt::println!("Hello, world!");
     // let cm_periph = unwrap!(cortex_m::Peripherals::take());
     // Board::init(cm_periph.DCB, cm_periph.DWT)
-    let board = microbit::Board::take().unwrap();
+    let mut board = microbit::Board::take().unwrap();
     let mut timer = Timer::new(board.TIMER0);
 
     let mut pin = board.pins.p0_02.into_push_pull_output(gpio::Level::High);
@@ -50,27 +50,36 @@ fn main() -> ! {
         // output the waveform on the speaker pin
         .set_output_pin(pwm::Channel::C0, pin.degrade())
         // Use prescale by 16 to achive darker sounds
-        .set_prescaler(pwm::Prescaler::Div4)
+        .set_prescaler(pwm::Prescaler::Div64)
         // Initial frequency
-        .set_period(Hertz(1u32))
+        .set_period(Hertz(500u32)) //????
         // Configure for up and down counter mode
-        .set_counter_mode(pwm::CounterMode::UpAndDown)
+        //.set_counter_mode(pwm::CounterMode::UpAndDown)
         // Set maximum duty cycle
-        .set_max_duty(6554)
+        //.set_max_duty(6666)
         // enable PWM
         .enable();
-    pwm
-        .set_seq_refresh(pwm::Seq::Seq0, 0)
-        .set_seq_end_delay(pwm::Seq::Seq0, 0);
-
+    // pwm
+    //     .set_seq_refresh(pwm::Seq::Seq0, 0)
+    //     .set_seq_end_delay(pwm::Seq::Seq0, 0);
+    defmt::println!("max duty {}",pwm.get_max_duty());
+    let h = pwm.get_period();
+    defmt::println!("get period {}",h.0);
+    let h2 = pwm.period();
+    defmt::println!("period {}",h2.0);
+    pwm.set_duty(pwm::Channel::C0,0);
     loop{
         defmt::println!("loop");
         timer.delay_ms(1000u32);
-        pwm.set_duty(pwm::Channel::C0,3277);
-        //timer.delay_ms(1000u32);
-        //pwm.set_duty(pwm::Channel::C0,6554);
+        pwm.set_duty(pwm::Channel::C0,pwm.get_max_duty()/2);
+        let duty1 = pwm.get_duty(pwm::Channel::C0);
+        defmt::println!("1-{}",duty1);
+        timer.delay_ms(1000u32);
+        pwm.set_duty(pwm::Channel::C0,pwm.get_max_duty()-1);
         let duty = pwm.get_duty(pwm::Channel::C0);
-        defmt::println!("?{}",duty);
+        defmt::println!("2-{}",duty);
+        let h3 = pwm.period();
+        defmt::println!("period {}",h3.0);
     }
 }
 

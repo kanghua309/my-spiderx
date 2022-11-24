@@ -51,8 +51,8 @@ impl <PWM,CH> S90<PWM,CH>
     PWM: embedded_hal::Pwm<Channel=CH, Duty=u16>,
     CH: Copy,
 {
-    pub fn new(pwm:PWM, chan:CH) -> Result<Self, DriverError> {
-        let driver = S90 {pwm, chan, duty_at_0_degrees: 3277, duty_at_180_degrees: 6554};
+    pub fn new(pwm:PWM, chan:CH,duty_at_0_degrees:u16,duty_at_180_degrees:u16) -> Result<Self, DriverError> {
+        let driver = S90 {pwm, chan, duty_at_0_degrees, duty_at_180_degrees};
         Ok(driver)
     }
 }
