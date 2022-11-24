@@ -50,7 +50,7 @@ fn main() -> ! {
         // output the waveform on the speaker pin
         .set_output_pin(pwm::Channel::C0, pin.degrade())
         // Use prescale by 16 to achive darker sounds
-        .set_prescaler(pwm::Prescaler::Div64)
+        .set_prescaler(pwm::Prescaler::Div32)
         // Initial frequency
         .set_period(Hertz(500u32)) //????
         // Configure for up and down counter mode
@@ -67,19 +67,23 @@ fn main() -> ! {
     defmt::println!("get period {}",h.0);
     let h2 = pwm.period();
     defmt::println!("period {}",h2.0);
-    pwm.set_duty(pwm::Channel::C0,0);
+    //pwm.set_duty(pwm::Channel::C0,0);
+    timer.delay_ms(1000u32);
+
+    pwm.set_duty(pwm::Channel::C0,1); //880
+    let duty0 = pwm.get_duty(pwm::Channel::C0);
+    defmt::println!("0-{}",duty0);
     loop{
         defmt::println!("loop");
         timer.delay_ms(1000u32);
-        pwm.set_duty(pwm::Channel::C0,pwm.get_max_duty()/2);
-        let duty1 = pwm.get_duty(pwm::Channel::C0);
-        defmt::println!("1-{}",duty1);
+        pwm.set_duty(pwm::Channel::C0,1);
+        let duty = pwm.get_duty(pwm::Channel::C0);
+        defmt::println!("1-{}",duty);
         timer.delay_ms(1000u32);
-        pwm.set_duty(pwm::Channel::C0,pwm.get_max_duty()-1);
+        let up_duty = (pwm.get_max_duty() as f64 * 0.85) as u16;
+        pwm.set_duty(pwm::Channel::C0, up_duty); //880
         let duty = pwm.get_duty(pwm::Channel::C0);
         defmt::println!("2-{}",duty);
-        let h3 = pwm.period();
-        defmt::println!("period {}",h3.0);
     }
 }
 

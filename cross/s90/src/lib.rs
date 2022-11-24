@@ -3,6 +3,7 @@
 use core::marker::PhantomData;
 use embedded_hal::Pwm;
 use embedded_hal::digital::v2::OutputPin;
+use defmt_rtt as _;
 
 // pub enum Channel {
 //     C0,
@@ -37,7 +38,7 @@ pub trait Servo {
 
 pub struct S90<PWM,CH>{
     //pin: PIN,
-    pwm: PWM,
+    pwm:PWM,
     //_mark: PhantomData<C>,
     chan:CH,
     duty_at_0_degrees: u16,
@@ -72,11 +73,12 @@ impl<PWM,CH> Servo for S90<PWM,CH>
     }
 
     fn write(&mut self, degrees: Degrees) -> () {
-        self.pwm.set_duty(self.chan,degrees_to_duty(
+        let dg = degrees_to_duty(
             self.duty_at_0_degrees,
             self.duty_at_180_degrees,
-            degrees,
-        ))
+            degrees
+        );
+        self.pwm.set_duty(self.chan,dg)
     }
 }
 
@@ -85,9 +87,9 @@ pub fn degrees_to_duty(
     duty_at_180_degrees: u16,
     degrees: Degrees,
 ) -> u16 {
-    (duty_at_0_degrees as f64
+    (duty_at_180_degrees as f64
         + ((degrees.0 / 180.0)
-        * (duty_at_180_degrees - duty_at_0_degrees) as f64)) as u16
+        * (duty_at_0_degrees - duty_at_180_degrees) as f64)) as u16
 }
 
 pub fn duty_to_degrees(
@@ -96,8 +98,8 @@ pub fn duty_to_degrees(
     duty: u16,
 ) -> Degrees {
     Degrees(
-        ((duty - duty_at_0_degrees) as f64
-            / (duty_at_180_degrees - duty_at_0_degrees) as f64)
+        ((duty_at_0_degrees - duty) as f64
+            / (duty_at_0_degrees - duty_at_180_degrees) as f64)
             * 180.0,
     )
 }

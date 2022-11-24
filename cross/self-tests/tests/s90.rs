@@ -35,7 +35,6 @@ mod tests {
     #[init]
     fn setup() -> impl Pwm<Duty = u16,Channel = pwm::Channel> {
         defmt::println!("test init");
-
         // let cm_periph = unwrap!(cortex_m::Peripherals::take());
         // Board::init(cm_periph.DCB, cm_periph.DWT)
         let board = microbit::Board::take().unwrap();
@@ -49,7 +48,7 @@ mod tests {
             // output the waveform on the speaker pin
             .set_output_pin(pwm::Channel::C0, pin.degrade())
             // Use prescale by 16 to achive darker sounds
-            .set_prescaler(pwm::Prescaler::Div64)
+            .set_prescaler(pwm::Prescaler::Div32)
             // Initial frequency
             .set_period(Hertz(500u32))
             // Configure for up and down counter mode
@@ -67,28 +66,11 @@ mod tests {
     #[test]
     fn simple_set_duty(pwm: &mut impl Pwm<Duty = u16,Channel = pwm::Channel>) {
         defmt::println!("simple_set_duty");
-        defmt::println!("max duty {}",pwm.get_max_duty());
-        assert_eq!(500,pwm.get_max_duty());
-        // const EXPECTED: [u8; 2] = [3, 66];
         defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-
-        // assert_eq!(EXPECTED, board.scd30.get_firmware_version().unwrap())
-        pwm.set_duty(pwm::Channel::C0,50);
-        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-        pwm.set_duty(pwm::Channel::C0,150);
-        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-        pwm.set_duty(pwm::Channel::C0,200);
-        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
+        assert_eq!(pwm.get_max_duty(),pwm.get_duty(pwm::Channel::C0));
         pwm.set_duty(pwm::Channel::C0,250);
         defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-        pwm.set_duty(pwm::Channel::C0,300);
-        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-        pwm.set_duty(pwm::Channel::C0,400);
-        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-        pwm.set_duty(pwm::Channel::C0,500);
-        defmt::println!("duty {}", pwm.get_duty(pwm::Channel::C0));
-        //let duty = pwm.get_duty(pwm::Channel::C0);
-        //assert_eq!(3277,duty);
+        assert_eq!(pwm.get_max_duty()-250,pwm.get_duty(pwm::Channel::C0));
     }
 }
 //

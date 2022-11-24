@@ -28,6 +28,8 @@ defmt-rtt = "0.3.0"
 defmt-test = "0.3.0"
 panic-probe = { version = "0.3.0", features = ["print-defmt"] }
 
+libm = "0.2.6"
+
 [features]
 default = ['defmt-trace']
 # these features are required by defmt

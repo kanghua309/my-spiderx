@@ -21,6 +21,8 @@
 - cargo embed --target thumbv7em-none-eabihf # cargo embed 用法 https://github.com/probe-rs/cargo-embed
 #### usage - 2
 - probe-run # probe-run 用法https://github.com/knurling-rs/probe-run
+#### usage - 3
+- cargo run #间接调用 probe run
 
 ### Test 
 cd cross/self-tests目录执行
@@ -40,3 +42,7 @@ cd cross/self-tests目录执行
 
 
 
+## issue?
+get_duty 返回值和设置的不一样？
+period 啥意思？ 50hz 为何不动？ 
+set_duty 啥意思？

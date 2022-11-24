@@ -326,6 +326,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
+name = "libm"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "348108ab3fba42ec82ff6e9564fc4ca0247bdccdc68dd8af9764bbc79c3c8ffb"
+
+[[package]]
 name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -557,6 +563,7 @@ version = "0.1.0"
 dependencies = [
  "crc-any",
  "defmt",
+ "defmt-rtt",
  "embedded-hal",
  "embedded-hal-mock",
 ]
@@ -571,6 +578,7 @@ dependencies = [
  "defmt-rtt",
  "defmt-test",
  "embedded-hal",
+ "libm",
  "microbit-v2",
  "panic-probe",
  "s90",
