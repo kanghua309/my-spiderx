@@ -40,7 +40,7 @@ mod tests {
     use microbit::hal::Timer;
     use s90::{F64Ext, Servo};
     use super::State;
-    use libm::{exp, floorf, sin, sqrtf,ceil};
+    use libm::{exp, floorf, sin, sqrtf, ceil, floor};
     use animate::{animate, Move};
 
     #[init]
@@ -60,7 +60,7 @@ mod tests {
             // output the waveform on the speaker pin
             .set_output_pin(super::pwm::Channel::C0, pin.degrade())
             // Use prescale by 16 to achive darker sounds
-            .set_prescaler(super::pwm::Prescaler::Div32)
+            .set_prescaler(super::pwm::Prescaler::Div1) //scale 约小精度越高
             // Initial frequency
             .set_period(super::Hertz(500u32))
             // Configure for up and down counter mode
@@ -104,7 +104,7 @@ mod tests {
 
         let d = state.s90.read().0;
         defmt::println!("dg1----:{}",d);
-        assert_ne!(0, ceil(d) as u16);
+        assert_eq!(180, ceil(d) as u16);
 
     }
 
