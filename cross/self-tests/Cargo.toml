@@ -12,15 +12,17 @@ harness = false
 [[test]]
 name = "s90_driver"
 harness = false
+[[test]]
+name = "animate"
+harness = false
 
 [dev-dependencies]
 s90 = { path = "../s90" }
+animate = { path = "../animate"}
+
 microbit-v2 = "0.12.0"
-#board = { path = "../board" }
-#cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 cortex-m = "0.7.3"
 cortex-m-rt = "0.7.0"
-
 embedded-hal = "0.2.3"
 
 defmt = "0.3.0"

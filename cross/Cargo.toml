@@ -2,6 +2,7 @@
 members = [
   "app",
   "board",
+  "animate",
   "s90",
   "self-tests",
 ]

@@ -12,6 +12,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "animate"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "defmt",
+ "defmt-rtt",
+ "defmt-test",
+ "embedded-hal",
+ "heapless 0.5.6",
+ "microbit-v2",
+ "panic-probe",
+ "s90",
+]
+
+[[package]]
 name = "app"
 version = "0.1.0"
 dependencies = [
@@ -572,6 +588,7 @@ dependencies = [
 name = "self-tests"
 version = "0.1.0"
 dependencies = [
+ "animate",
  "cortex-m",
  "cortex-m-rt",
  "defmt",

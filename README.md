@@ -35,7 +35,9 @@ cd cross/self-tests目录执行
 我们采取内外层crate模式，cross 内层！
 - cross 目录下是跨平台的内容 ，目前分3+1个，💰 依次向下依赖
 - - app 是main程序
-- - board、driver 都是lib库
+- - board、driver、animate都是lib库
+- - - driver 是纯s90驱动；animate 建立在其上的动作库 #两者都采用范型编程,和具体平台无关！
+- - - board ？应该是我们集成腿之后，封装的board spec api
 - - self-test 是单独成包的测试程序所在（用于cargo test 在no std下测试）
 - cross 外目录见 https://ferrous-systems.com/blog/test-embedded-app/
 

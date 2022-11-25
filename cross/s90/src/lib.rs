@@ -78,6 +78,7 @@ impl<PWM,CH> Servo for S90<PWM,CH>
             self.duty_at_180_degrees,
             degrees
         );
+        //defmt::println!("Hello, world!---------------:{}",dg);
         self.pwm.set_duty(self.chan,dg)
     }
 }

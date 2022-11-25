@@ -5,6 +5,7 @@
 use defmt_rtt as _;
 use panic_probe as _;
 use s90::S90;
+use animate::*;
 
 //use embedded_hal::Pwm;
 //use embedded_hal::digital::v2::OutputPin;
@@ -20,11 +21,11 @@ use microbit::{
     pac::{self, interrupt},
     board,
 };
+
 use microbit::hal::timer::Timer;
 use microbit::pac::TIMER0;
 
 struct State {
-    //s90: S90<gpio::Pin<gpio::Output<gpio::PushPull>>,microbit::hal::pwm::Pwm<microbit::hal::pac::PWM0>,pwm::Channel>,
     s90: S90<microbit::hal::pwm::Pwm<microbit::hal::pac::PWM0>,pwm::Channel>,
     timer:Timer<TIMER0>,
 }
@@ -38,10 +39,9 @@ mod tests {
     use embedded_hal::Pwm;
     use microbit::hal::Timer;
     use s90::{F64Ext, Servo};
-    // use embedded_hal::Pwm;
-    // use embedded_hal::digital::v2::OutputPin;
     use super::State;
     use libm::{exp, floorf, sin, sqrtf,ceil};
+    use animate::{animate, Move};
 
     #[init]
     fn setup() -> State {
@@ -87,28 +87,25 @@ mod tests {
     }
 
     #[test]
-    fn simple_set_duty(state :&mut State) {
-        defmt::println!("driver_simple_set_duty");
-        for i in 0..10 {
-            defmt::println!("loop");
-            //defmt::println!("dg0:{}",state.s90.read().0);
-            // state.s90.write(0.0.degrees());
-            state.timer.delay_ms(1000u32);
-            let dg = (i as f64 * 10.0) as f64;
-            state.s90.write(dg.degrees());
-            defmt::println!("dg:{}",state.s90.read().0);
-            let d = state.s90.read().0;
-            assert_eq!(i * 10, ceil(d) as u16);
-        }
+    fn simple_action(state:&mut State) {
+        defmt::println!("simple_action");
+        let d = state.s90.read().0;
+        defmt::println!("dg0----:{}",d);
+        animate(
+            &mut [
+                Move::new(
+                    &mut state.s90,
+                    180.0.degrees()
+                ),
+            ],
+            2000,
+            &mut state.timer,
+        );
+
+        let d = state.s90.read().0;
+        defmt::println!("dg1----:{}",d);
+        assert_ne!(0, ceil(d) as u16);
 
     }
-    // #[test]
-    // fn simple_rotate(pwm: &mut impl Pwm<Duty = u16,Channel = pwm::Channel>) {
-    //     defmt::println!("simple_rotate");
-    //     // const EXPECTED: [u8; 2] = [3, 66];
-    //     // assert_eq!(EXPECTED, board.scd30.get_firmware_version().unwrap())
-    //     pwm.set_duty(pwm::Channel::C0,3277);
-    //     let duty = pwm.get_duty(pwm::Channel::C0);
-    //     assert_eq!(3277,duty);
-    // }
+
 }
