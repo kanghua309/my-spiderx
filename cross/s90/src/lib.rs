@@ -43,17 +43,17 @@ pub struct S90<PWM,CH>{
     chan:CH,
     duty_at_0_degrees: u16,
     duty_at_180_degrees: u16,
+    inverted: bool,
 }
 
 
 impl <PWM,CH> S90<PWM,CH>
     where
-    //PIN: embedded_hal::digital::v2::OutputPin,
     PWM: embedded_hal::Pwm<Channel=CH, Duty=u16>,
     CH: Copy,
 {
-    pub fn new(pwm:PWM, chan:CH,duty_at_0_degrees:u16,duty_at_180_degrees:u16) -> Result<Self, DriverError> {
-        let driver = S90 {pwm, chan, duty_at_0_degrees, duty_at_180_degrees};
+    pub fn new(pwm:PWM, chan:CH,duty_at_0_degrees:u16,duty_at_180_degrees:u16 ,inverted: bool) -> Result<Self, DriverError> {
+        let driver = S90 {pwm, chan, duty_at_0_degrees, duty_at_180_degrees, inverted};
         Ok(driver)
     }
 }
@@ -68,7 +68,8 @@ impl<PWM,CH> Servo for S90<PWM,CH>
         duty_to_degrees(
             self.duty_at_0_degrees,
             self.duty_at_180_degrees,
-            self.pwm.get_duty(self.chan)
+            self.pwm.get_duty(self.chan),
+            self.inverted,
         )
     }
 
@@ -76,7 +77,8 @@ impl<PWM,CH> Servo for S90<PWM,CH>
         let dg = degrees_to_duty(
             self.duty_at_0_degrees,
             self.duty_at_180_degrees,
-            degrees
+            degrees,
+            self.inverted,
         );
         //defmt::println!("Hello, world!---------------:{}",dg);
         self.pwm.set_duty(self.chan,dg)
@@ -87,9 +89,15 @@ pub fn degrees_to_duty(
     duty_at_0_degrees: u16,
     duty_at_180_degrees: u16,
     degrees: Degrees,
+    inverted: bool,
 ) -> u16 {
+    let norm_degrees = if inverted {
+        180.0 - degrees.0
+    } else {
+        degrees.0
+    };
     (duty_at_180_degrees as f64
-        + ((degrees.0 / 180.0)
+        + ((norm_degrees / 180.0)
         * (duty_at_0_degrees - duty_at_180_degrees) as f64)) as u16
 }
 
@@ -97,12 +105,16 @@ pub fn duty_to_degrees(
     duty_at_0_degrees: u16,
     duty_at_180_degrees: u16,
     duty: u16,
+    inverted: bool,
 ) -> Degrees {
-    Degrees(
-        ((duty_at_0_degrees - duty) as f64
-            / (duty_at_0_degrees - duty_at_180_degrees) as f64)
-            * 180.0,
-    )
+    let norm_degrees = ((duty_at_0_degrees - duty) as f64
+        / (duty_at_0_degrees - duty_at_180_degrees) as f64)
+    * 180.0;
+    if inverted {
+        Degrees(180.0 - norm_degrees)
+    } else {
+        Degrees(norm_degrees)
+    }
 }
 
 

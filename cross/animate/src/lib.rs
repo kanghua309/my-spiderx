@@ -14,31 +14,6 @@ use embedded_hal::blocking::delay;
 use heapless::Vec;
 use heapless::consts::*;
 
-// pub fn animate(moves: &[Move], speed: u32, sleep: &mut impl delay::DelayMs<u32>) -> () {
-//     const STEP_SPEED: u32 = 20;
-//     let step_num = speed / STEP_SPEED;
-//
-//     let mut deltas: Vec<_, U8> = Vec::new();
-//
-//     for m in moves {
-//         let current = m.servo.read();
-//         let delta = (m.desired.0 - current.0) / step_num as f64;
-//
-//         deltas.push(delta).unwrap();
-//     }
-//     for _ in 0..(speed / STEP_SPEED) {
-//         for i in 0..moves.len() {
-//             let  m  = &moves[i];
-//             let delta = deltas[i];
-//
-//             let new_degrees = m.servo.read().0 + delta;
-//             m.servo.write(new_degrees.degrees());
-//         }
-//
-//         sleep.delay_ms(STEP_SPEED);
-//     }
-// }
-
 pub struct Move<'a> {
     servo: &'a mut dyn Servo,
     desired: Degrees,

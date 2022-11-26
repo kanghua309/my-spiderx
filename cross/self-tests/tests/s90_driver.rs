@@ -41,7 +41,7 @@ mod tests {
     // use embedded_hal::Pwm;
     // use embedded_hal::digital::v2::OutputPin;
     use super::State;
-    use libm::{exp, floorf, sin, sqrtf,ceil};
+    use libm::{exp, floorf, sin, sqrtf, ceil, floor};
 
     #[init]
     fn setup() -> State {
@@ -60,7 +60,7 @@ mod tests {
             // output the waveform on the speaker pin
             .set_output_pin(super::pwm::Channel::C0, pin.degrade())
             // Use prescale by 16 to achive darker sounds
-            .set_prescaler(super::pwm::Prescaler::Div32)
+            .set_prescaler(super::pwm::Prescaler::Div1)
             // Initial frequency
             .set_period(super::Hertz(500u32))
             // Configure for up and down counter mode
@@ -75,14 +75,16 @@ mod tests {
         //TODO:*******************************************************************/
         let duty_at_0_degress = (pwm.get_max_duty() as f64 * 1.0) as u16;
         let duty_at_180_degress = 0;
-        pwm.set_duty(super::pwm::Channel::C0,1);
+        pwm.set_duty(super::pwm::Channel::C0,0);
         //TODO:********************************************************************/
 
         defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,pwm.get_duty(super::pwm::Channel::C0));
         let s90 = super::S90::new(pwm,
                                   super::pwm::Channel::C0,
                                   duty_at_0_degress,
-                                  duty_at_180_degress).unwrap();
+                                  duty_at_180_degress,
+                                  false).unwrap();
+        defmt::println!("dgXXX----:{}",s90.read().0);
         State { s90,timer }
     }
 
@@ -100,7 +102,6 @@ mod tests {
             let d = state.s90.read().0;
             assert_eq!(i * 10, ceil(d) as u16);
         }
-
     }
     // #[test]
     // fn simple_rotate(pwm: &mut impl Pwm<Duty = u16,Channel = pwm::Channel>) {

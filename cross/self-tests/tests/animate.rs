@@ -75,14 +75,16 @@ mod tests {
         //TODO:*******************************************************************/
         let duty_at_0_degress = (pwm.get_max_duty() as f64 * 1.0) as u16;
         let duty_at_180_degress = 0;
-        pwm.set_duty(super::pwm::Channel::C0,1);
+        pwm.set_duty(super::pwm::Channel::C0,0);
         //TODO:********************************************************************/
 
         defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,pwm.get_duty(super::pwm::Channel::C0));
         let s90 = super::S90::new(pwm,
                                   super::pwm::Channel::C0,
                                   duty_at_0_degress,
-                                  duty_at_180_degress).unwrap();
+                                  duty_at_180_degress,
+                                  false).unwrap();
+        defmt::println!("dgXXX----:{}",s90.read().0);
         State { s90,timer }
     }
 
