@@ -15,9 +15,6 @@ harness = false
 [[test]]
 name = "animate"
 harness = false
-[[test]]
-name = "animate2"
-harness = false
 
 [dev-dependencies]
 s90 = { path = "../s90" }
