@@ -1,8 +1,8 @@
 #![cfg_attr(not(test), no_std)]
 
-use core::marker::PhantomData;
+// use core::marker::PhantomData;
 use embedded_hal::Pwm;
-use embedded_hal::digital::v2::OutputPin;
+// use embedded_hal::digital::v2::OutputPin;
 use defmt_rtt as _;
 
 // pub enum Channel {
@@ -36,9 +36,9 @@ pub trait Servo {
     fn write(&mut self, degrees: Degrees) -> ();
 }
 
-pub struct S90<PWM,CH>{
+pub struct S90<'a , PWM, CH> {
     //pin: PIN,
-    pwm:PWM,
+    pwm: &'a mut PWM,
     //_mark: PhantomData<C>,
     chan:CH,
     duty_at_0_degrees: u16,
@@ -47,20 +47,19 @@ pub struct S90<PWM,CH>{
 }
 
 
-impl <PWM,CH> S90<PWM,CH>
+impl <'a,PWM,CH> S90<'a,PWM,CH>
     where
     PWM: embedded_hal::Pwm<Channel=CH, Duty=u16>,
     CH: Copy,
 {
-    pub fn new(pwm:PWM, chan:CH,duty_at_0_degrees:u16,duty_at_180_degrees:u16 ,inverted: bool) -> Result<Self, DriverError> {
+    pub fn new(pwm:&'a mut PWM, chan:CH,duty_at_0_degrees:u16,duty_at_180_degrees:u16 ,inverted: bool) -> Result<Self, DriverError> {
         let driver = S90 {pwm, chan, duty_at_0_degrees, duty_at_180_degrees, inverted};
         Ok(driver)
     }
 }
 
-impl<PWM,CH> Servo for S90<PWM,CH>
+impl<'a,PWM,CH> Servo for S90<'a,PWM,CH>
     where
-    //PIN: OutputPin,
     PWM: Pwm<Channel=CH, Duty=u16>,
     CH: Copy,
 {

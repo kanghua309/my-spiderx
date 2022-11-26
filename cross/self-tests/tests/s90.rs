@@ -38,7 +38,7 @@ mod tests {
         // let cm_periph = unwrap!(cortex_m::Peripherals::take());
         // Board::init(cm_periph.DCB, cm_periph.DWT)
         let board = microbit::Board::take().unwrap();
-        let mut timer = Timer::new(board.TIMER0);
+        // let mut timer = Timer::new(board.TIMER0);
 
         let mut pin = board.pins.p0_02.into_push_pull_output(gpio::Level::High);
         let _ = pin.set_low();

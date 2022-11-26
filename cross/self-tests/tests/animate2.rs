@@ -21,12 +21,13 @@ use microbit::{
     pac::{self, interrupt},
     board,
 };
+use microbit::hal::pwm::Pwm;
 
 use microbit::hal::timer::Timer;
 use microbit::pac::TIMER0;
 
 struct State {
-    s90: S90<microbit::hal::pwm::Pwm<microbit::hal::pac::PWM0>,pwm::Channel>,
+    pwm: Pwm<microbit::hal::pac::PWM0>,
     timer:Timer<TIMER0>,
 }
 
@@ -46,16 +47,13 @@ mod tests {
     #[init]
     fn setup() -> State {
         defmt::println!("driver test init");
-        // let cm_periph = unwrap!(cortex_m::Peripherals::take());
-        // Board::init(cm_periph.DCB, cm_periph.DWT)
-        let board = microbit::Board::take().unwrap();
-        let mut timer = Timer::new(board.TIMER0);
 
-        //let mut xpin = board.pins.p0_02.into_push_pull_output(super::gpio::Level::High);
+        let board = microbit::Board::take().unwrap();
+        let timer = Timer::new(board.TIMER0);
         let mut pin = board.pins.p0_02.into_push_pull_output(super::gpio::Level::High);
         let _ = pin.set_low();
         // Use the PWM peripheral to generate a waveform for the speaker
-        let mut pwm = super::pwm::Pwm::new(board.PWM0);
+        let pwm = super::pwm::Pwm::new(board.PWM0);
         pwm
             // output the waveform on the speaker pin
             .set_output_pin(super::pwm::Channel::C0, pin.degrade())
@@ -69,45 +67,66 @@ mod tests {
             //.set_max_duty(6554)
             // enable PWM
             .enable();
-        // pwm
-        //     .set_seq_refresh(super::pwm::Seq::Seq0, 0)
-        //     .set_seq_end_delay(super::pwm::Seq::Seq0, 0);
-        //TODO:*******************************************************************/
-        let duty_at_0_degress = (pwm.get_max_duty() as f64 * 1.0) as u16;
-        let duty_at_180_degress = 0;
-        pwm.set_duty(super::pwm::Channel::C0,0);
-        //TODO:********************************************************************/
+        State { pwm,timer }
+    }
 
-        defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,pwm.get_duty(super::pwm::Channel::C0));
-        let s90 = super::S90::new(pwm,
+    #[test]
+    fn simple_action(state:&mut State) {
+        let duty_at_0_degress = (state.pwm.get_max_duty() as f64 * 1.0) as u16;
+        let duty_at_180_degress = 0;
+        state.pwm.set_duty(super::pwm::Channel::C0,0);
+        defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,state.pwm.get_duty(super::pwm::Channel::C0));
+        let mut s90 = super::S90::new(&mut state.pwm,
                                   super::pwm::Channel::C0,
                                   duty_at_0_degress,
                                   duty_at_180_degress,
                                   false).unwrap();
         defmt::println!("dgXXX----:{}",s90.read().0);
-        State { s90,timer }
-    }
-
-    #[test]
-    fn simple_action(state:&mut State) {
         defmt::println!("simple_action");
-        let d = state.s90.read().0;
+        let d = s90.read().0;
         defmt::println!("dg0----:{}",d);
         animate(
             &mut [
                 Move::new(
-                    &mut state.s90,
+                    &mut s90,
                     180.0.degrees()
                 ),
             ],
             2000,
             &mut state.timer,
         );
-
-        let d = state.s90.read().0;
+        let d = s90.read().0;
         defmt::println!("dg1----:{}",d);
         assert_eq!(180, ceil(d) as u16);
-
     }
 
+    #[test]
+    fn simple_action_revert(state:&mut State) {
+        let duty_at_0_degress = (state.pwm.get_max_duty() as f64 * 1.0) as u16;
+        let duty_at_180_degress = 0;
+        state.pwm.set_duty(super::pwm::Channel::C0,duty_at_0_degress);
+        defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,state.pwm.get_duty(super::pwm::Channel::C0));
+        let mut s90 = super::S90::new(&mut state.pwm,
+                                      super::pwm::Channel::C0,
+                                      duty_at_0_degress,
+                                      duty_at_180_degress,
+                                      true).unwrap();
+        defmt::println!("dgXXX----:{}",s90.read().0);
+        defmt::println!("simple_action_revert");
+        let d = s90.read().0;
+        defmt::println!("dg0----:{}",d);
+        animate(
+            &mut [
+                Move::new(
+                    &mut s90,
+                    179.0.degrees()
+                ),
+            ],
+            2000,
+            &mut state.timer,
+        );
+        let d = s90.read().0;
+        defmt::println!("dg1----:{}",d);
+        assert_eq!(179, floor(d) as u16);
+    }
 }
