@@ -31,7 +31,6 @@ dependencies = [
 name = "app"
 version = "0.1.0"
 dependencies = [
- "board",
  "cortex-m",
  "cortex-m-rt",
  "defmt",
@@ -87,17 +86,6 @@ name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
-
-[[package]]
-name = "board"
-version = "0.1.0"
-dependencies = [
- "cortex-m",
- "cortex-m-rt",
- "defmt",
- "microbit-v2",
- "s90",
-]
 
 [[package]]
 name = "byteorder"
@@ -382,6 +370,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "my-board"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "defmt",
+ "defmt-rtt",
+ "microbit-v2",
+ "panic-probe",
+ "s90",
+]
+
+[[package]]
 name = "nb"
 version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -597,6 +598,7 @@ dependencies = [
  "embedded-hal",
  "libm",
  "microbit-v2",
+ "my-board",
  "panic-probe",
  "s90",
 ]

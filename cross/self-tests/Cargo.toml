@@ -15,10 +15,14 @@ harness = false
 [[test]]
 name = "animate"
 harness = false
+[[test]]
+name = "myboard"
+harness = false
 
 [dev-dependencies]
 s90 = { path = "../s90" }
 animate = { path = "../animate"}
+my-board = { path = "../board" }
 
 microbit-v2 = "0.12.0"
 cortex-m = "0.7.3"
