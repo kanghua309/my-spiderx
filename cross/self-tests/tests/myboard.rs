@@ -59,7 +59,6 @@ mod tests {
                             duty_at_0_degress,
                             duty_at_180_degress,
                             true).unwrap();
-
         State{ s90, s90_revert, timer: my_board.timer0}
     }
 
