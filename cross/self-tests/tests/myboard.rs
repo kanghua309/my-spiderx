@@ -65,7 +65,6 @@ mod tests {
     #[test]
     fn simple_test(state: &mut State) {
         defmt::println!("simple_test");
-
         animate(
             &mut [
                 Move::new(

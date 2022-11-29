@@ -16,6 +16,9 @@ harness = false
 name = "animate"
 harness = false
 [[test]]
+name = "animate_2"
+harness = false
+[[test]]
 name = "myboard"
 harness = false
 
