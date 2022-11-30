@@ -106,6 +106,9 @@ mod tests {
         let d = s90.read().0;
         defmt::println!("dg1----:{}",d);
         assert_eq!(180, ceil(d) as u16);
+        unsafe {
+            replace(&mut state.pwm,Some(s90.destroy().pwm))
+        };
     }
 
     #[test]
@@ -140,5 +143,8 @@ mod tests {
         let d = s90.read().0;
         defmt::println!("dg1----:{}",d);
         assert_eq!(179, floor(d) as u16);
+        unsafe {
+            replace(&mut state.pwm,Some(s90.destroy().pwm))
+        };
     }
 }

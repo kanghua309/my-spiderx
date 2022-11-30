@@ -33,7 +33,7 @@ pub trait Servo {
 
 pub struct S90<PWM, CH> {
     //pin: PIN,
-    pwm:PWM,
+    pub pwm:PWM,
     //_mark: PhantomData<C>,
     chan:CH,
     duty_at_0_degrees: u16,
@@ -50,6 +50,9 @@ impl <PWM,CH> S90<PWM,CH>
     pub fn new(pwm:PWM, chan:CH,duty_at_0_degrees:u16,duty_at_180_degrees:u16 ,inverted: bool) -> Result<Self, DriverError> {
         let driver = S90 {pwm, chan, duty_at_0_degrees, duty_at_180_degrees, inverted};
         Ok(driver)
+    }
+    pub fn destroy(self) -> Self{
+        self
     }
 }
 
