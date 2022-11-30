@@ -7,7 +7,7 @@ publish = false
 
 
 [[test]]
-name = "s90"
+name = "s90_no_driver"
 harness = false
 [[test]]
 name = "s90_driver"
@@ -16,7 +16,7 @@ harness = false
 name = "animate"
 harness = false
 [[test]]
-name = "animate_2"
+name = "animate_with_option"
 harness = false
 [[test]]
 name = "myboard"
