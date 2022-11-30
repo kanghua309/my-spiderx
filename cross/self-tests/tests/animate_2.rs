@@ -108,33 +108,37 @@ mod tests {
         assert_eq!(180, ceil(d) as u16);
     }
 
-    // #[test]
-    // fn simple_action_revert(state:&mut State) {
-    //     let duty_at_0_degress = (state.pwm.get_max_duty() as f64 * 1.0) as u16;
-    //     let duty_at_180_degress = 0;
-    //     state.pwm.set_duty(super::pwm::Channel::C0,duty_at_0_degress);
-    //     defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,state.pwm.get_duty(super::pwm::Channel::C0));
-    //     let mut s90 = super::S90::new(&mut state.pwm,
-    //                                   super::pwm::Channel::C0,
-    //                                   duty_at_0_degress,
-    //                                   duty_at_180_degress,
-    //                                   true).unwrap();
-    //     defmt::println!("dgXXX----:{}",s90.read().0);
-    //     defmt::println!("simple_action_revert");
-    //     let d = s90.read().0;
-    //     defmt::println!("dg0----:{}",d);
-    //     animate(
-    //         &mut [
-    //             Move::new(
-    //                 &mut s90,
-    //                 179.0.degrees()
-    //             ),
-    //         ],
-    //         2000,
-    //         &mut state.timer,
-    //     );
-    //     let d = s90.read().0;
-    //     defmt::println!("dg1----:{}",d);
-    //     assert_eq!(179, floor(d) as u16);
-    // }
+    #[test]
+    fn simple_action_revert(state:&mut State) {
+        let duty_at_0_degress = (state.pwm.as_ref().unwrap().get_max_duty() as f64 * 1.0) as u16;
+        let duty_at_180_degress = 0;
+        state.pwm.as_mut().unwrap().set_duty(pwm::Channel::C0,duty_at_0_degress);
+        defmt::println!("{},{},{}",duty_at_0_degress,duty_at_180_degress,state.pwm.as_ref().unwrap().get_duty(pwm::Channel::C0));
+        let my_pwm = unsafe {
+            replace(&mut state.pwm, None)
+        };
+
+        let mut s90 = super::S90::new(my_pwm.unwrap(),
+                                      pwm::Channel::C0,
+                                      duty_at_0_degress,
+                                      duty_at_180_degress,
+                                      true).unwrap();
+        defmt::println!("dgXXX----:{}",s90.read().0);
+        defmt::println!("simple_action_revert");
+        let d = s90.read().0;
+        defmt::println!("dg0----:{}",d);
+        animate(
+            &mut [
+                Move::new(
+                    &mut s90,
+                    179.0.degrees()
+                ),
+            ],
+            2000,
+            &mut state.timer,
+        );
+        let d = s90.read().0;
+        defmt::println!("dg1----:{}",d);
+        assert_eq!(179, floor(d) as u16);
+    }
 }

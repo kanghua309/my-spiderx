@@ -1,6 +1,5 @@
 #![no_std]
 
-use defmt::unwrap;
 use defmt_rtt as _;
 
 use panic_probe as _;
@@ -12,16 +11,16 @@ use panic_probe as _;
 //     },
 //     // pac::{self, interrupt}, board, Board
 // };
-use microbit::hal::gpio::{Level, p0};
+use microbit::hal::gpio::{p0,Level};
 use microbit::hal::pwm::{Channel, Pwm};
-use microbit::pac;
 use microbit::{
     hal::{
         pwm,
         time::Hertz,
+        timer::{Timer},
     },
+    pac,
 };
-use microbit::hal::timer::Timer;
 
 
 pub struct ServoPwms {
@@ -41,7 +40,7 @@ impl MyBoard {
             pac::CorePeripherals::take()?,
         ))
     }
-    pub fn new(p: pac::Peripherals, cp: pac::CorePeripherals) -> Self {
+    pub fn new(p: pac::Peripherals, _: pac::CorePeripherals) -> Self {
         let p0parts = p0::Parts::new(p.P0);
         //let p1parts = p1::Parts::new(p.P1);
         let pwm0 = Pwm::new(p.PWM0);

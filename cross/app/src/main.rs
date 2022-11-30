@@ -5,32 +5,32 @@
 // use core::slice;
 //
 // use board::{Board, Instant, Scd30, Serial};
-use defmt::unwrap;
+//use defmt::unwrap;
 use defmt_rtt as _;
 // use heapless::{consts, Vec};
 // use messages::{Host2Target, Measurement, Target2Host};
 use panic_probe as _;
 // use rtic::cyccnt::U32Ext;
 
-use cortex_m_rt::entry;
+//use cortex_m_rt::entry;
 
-use core::time::Duration;
+//use core::time::Duration;
 use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
-use defmt::{assert_eq};
+//use defmt::{assert_eq};
 // use embedded_hal::Pwm;
 // use embedded_hal::digital::v2::OutputPin;
 // use embedded_hal::prelude::_embedded_hal_blocking_delay_DelayMs;
 use microbit::{
     hal::{
-        clocks::Clocks,
+        //clocks::Clocks,
         gpio,
         // prelude::OutputPin,
         pwm,
-        rtc::{Rtc, RtcInterrupt},
+        //rtc::{Rtc, RtcInterrupt},
         time::Hertz,
     },
-    pac::{self, interrupt},
-    board,
+    //pac::{self, interrupt},
+    //board,
 };
 use microbit::hal::prelude::{_embedded_hal_Pwm, OutputPin};
 use microbit::hal::timer::Timer;
@@ -39,7 +39,7 @@ fn main() -> ! {
     defmt::println!("Hello, world!");
     // let cm_periph = unwrap!(cortex_m::Peripherals::take());
     // Board::init(cm_periph.DCB, cm_periph.DWT)
-    let mut board = microbit::Board::take().unwrap();
+    let  board = microbit::Board::take().unwrap();
     let mut timer = Timer::new(board.TIMER0);
 
     let mut pin = board.pins.p0_02.into_push_pull_output(gpio::Level::High);
