@@ -86,7 +86,7 @@ mod tests {
         pwm1
             .set_output_pin(pwm::Channel::C0, p0_03.degrade())
             .set_prescaler(pwm::Prescaler::Div1) //scale 约小精度越高
-            .set_period(Hertz(500u32))
+            .set_period(Hertz(400u32))
             .enable();
         let duty_at_0_degress = (pwm1.get_max_duty() as f64 * 1.0) as u16;
         let duty_at_180_degress = 0;

@@ -69,7 +69,7 @@ mod tests {
         pwm0
             .set_output_pin(pwm::Channel::C0, p0_02.degrade())
             .set_prescaler(pwm::Prescaler::Div1) //scale 约小精度越高
-            .set_period(Hertz(500u32))
+            .set_period(Hertz(400u32))
             .enable();
         State { pwm:Some(pwm0), timer }
     }

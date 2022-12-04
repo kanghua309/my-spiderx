@@ -24,7 +24,7 @@ mod tests {
     use libm::{exp, floorf, sin, sqrtf, ceil, floor};
     use embedded_hal::Pwm;
     use embedded_hal::digital::v2::OutputPin;
-    use embedded_hal::prelude::_embedded_hal_blocking_delay_DelayMs;
+    use embedded_hal::prelude::{_embedded_hal_blocking_delay_DelayMs, _embedded_hal_blocking_spi_Write};
     use microbit::{
         hal::{
             clocks::Clocks,
@@ -50,7 +50,7 @@ mod tests {
         pwm
             .set_output_pin(pwm::Channel::C0, pin.degrade())
             .set_prescaler(pwm::Prescaler::Div1)
-            .set_period(Hertz(500u32))
+            .set_period(Hertz(400u32))
             .enable();
         let duty_at_0_degress = (pwm.get_max_duty() as f64 * 1.0) as u16;
         let duty_at_180_degress = 0;

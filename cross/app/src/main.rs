@@ -50,18 +50,18 @@ fn main() -> ! {
         // output the waveform on the speaker pin
         .set_output_pin(pwm::Channel::C0, pin.degrade())
         // Use prescale by 16 to achive darker sounds
-        .set_prescaler(pwm::Prescaler::Div32)
+        .set_prescaler(pwm::Prescaler::Div16)
         // Initial frequency
-        .set_period(Hertz(500u32)) //????
+        .set_period(Hertz(400u32)) //????
         // Configure for up and down counter mode
         //.set_counter_mode(pwm::CounterMode::UpAndDown)
         // Set maximum duty cycle
-        //.set_max_duty(6666)
+        //.set_max_duty(4000)
         // enable PWM
         .enable();
-    // pwm
-    //     .set_seq_refresh(pwm::Seq::Seq0, 0)
-    //     .set_seq_end_delay(pwm::Seq::Seq0, 0);
+    pwm
+        .set_seq_refresh(pwm::Seq::Seq0, 0)
+        .set_seq_end_delay(pwm::Seq::Seq0, 0);
     defmt::println!("max duty {}",pwm.get_max_duty());
     let h = pwm.get_period();
     defmt::println!("get period {}",h.0);
@@ -70,20 +70,39 @@ fn main() -> ! {
     //pwm.set_duty(pwm::Channel::C0,0);
     timer.delay_ms(1000u32);
 
-    pwm.set_duty(pwm::Channel::C0,1); //880
-    let duty0 = pwm.get_duty(pwm::Channel::C0);
-    defmt::println!("0-{}",duty0);
+
+    pwm.set_duty(pwm::Channel::C0,pwm.get_max_duty());
+
+    // pwm.set_duty(pwm::Channel::C0,1); //880
+    // let duty0 = pwm.get_duty(pwm::Channel::C0);
+    // defmt::println!("0-{}",duty0);
     loop{
         defmt::println!("loop");
-        timer.delay_ms(1000u32);
-        pwm.set_duty(pwm::Channel::C0,1);
-        let duty = pwm.get_duty(pwm::Channel::C0);
-        defmt::println!("1-{}",duty);
-        timer.delay_ms(1000u32);
+        // for i in 0 .. 20{
+        //     let duty = (i as f32 * pwm.get_max_duty() as f32/20.0) as u16;
+        //     pwm.set_duty(pwm::Channel::C0,duty); //880
+        //     timer.delay_ms(1000u32);
+        //     defmt::println!("-{}:{}",i,pwm.get_duty(pwm::Channel::C0));
+        //     //
+        //     // //defmt::println!("dg0:{}",state.s90.read().0);
+        //     // state.timer.delay_ms(1000u32);
+        //     //
+        //     // let dg = (i as f64 * 100.0) as f64;
+        //     // state.s90.write(dg.degrees());
+        //     // defmt::println!("dg:{}",state.s90.read().0);
+        //     // let d = state.s90.read().0;
+        //     // assert_eq!(i * 10, ceil(d) as u16);
+        // }
+        // timer.delay_ms(1000u32);
+        // pwm.set_duty(pwm::Channel::C0,1);
+        // let duty = pwm.get_duty(pwm::Channel::C0);
+        // defmt::println!("1-{}",duty);
         let up_duty = (pwm.get_max_duty() as f64 * 0.85) as u16;
         pwm.set_duty(pwm::Channel::C0, up_duty); //880
-        let duty = pwm.get_duty(pwm::Channel::C0);
-        defmt::println!("2-{}",duty);
+        timer.delay_ms(100000u32);
+
+        // let duty = pwm.get_duty(pwm::Channel::C0);
+        // defmt::println!("2-{}",duty);
     }
 }
 

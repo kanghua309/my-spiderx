@@ -50,7 +50,7 @@ mod tests {
             // Use prescale by 16 to achive darker sounds
             .set_prescaler(pwm::Prescaler::Div32)
             // Initial frequency
-            .set_period(Hertz(500u32))
+            .set_period(Hertz(400u32))
             // Configure for up and down counter mode
             //.set_counter_mode(pwm::CounterMode::UpAndDown)
             // Set maximum duty cycle

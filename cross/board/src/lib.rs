@@ -48,7 +48,7 @@ impl MyBoard {
         pwm0
             .set_output_pin(Channel::C0, p0_02.degrade())
             .set_prescaler(pwm::Prescaler::Div1)
-            .set_period(Hertz(500u32))
+            .set_period(Hertz(400u32))
             .enable();
 
         let pwm1 = Pwm::new(p.PWM1);
@@ -56,7 +56,7 @@ impl MyBoard {
         pwm1
             .set_output_pin(Channel::C0, p0_03.degrade())
             .set_prescaler(pwm::Prescaler::Div1)
-            .set_period(Hertz(500u32))
+            .set_period(Hertz(400u32))
             .enable();
         let board = Self {
             servo_pwms: ServoPwms {
