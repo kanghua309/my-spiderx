@@ -37,7 +37,8 @@ mod tests {
     use microbit::hal::Twim;
     use microbit::pac::TWIM0;
     use pwm_pca9685::{Address, Channel, Pca9685};
-    use s90::{Degrees, Servo};
+    use animate::{animate, Move};
+    use s90::{Degrees, F64Ext, Servo};
     use s90::i2c_s90::S90;
     use crate::State;
 
@@ -72,26 +73,56 @@ mod tests {
     //         }
     //     }
     // }
+    // #[test]
+    // fn set_angle_revert(state: &mut State) {
+    //     defmt::println!("set_angle");
+    //     // Turn on channel 0 at 0
+    //     let mut s90 = S90::new(&mut state.i2c,
+    //                            0x80,
+    //                            0,
+    //                            Degrees(90.0),
+    //                            true).unwrap();
+    //     loop {
+    //         defmt::println!("curent angle:{}",s90.read().0);
+    //         state.timer.delay_ms(1_0000_u16 as u32);
+    //         for index in 0..1 {
+    //             defmt::println!("index:{}",index);
+    //             for angle in 0..180 {
+    //                 s90.write(Degrees(angle as f64));
+    //                 state.timer.delay_ms(1_00_u16 as u32);
+    //                 defmt::println!("curent angle:{}",s90.read().0)
+    //             }
+    //         }
+    //     }
+    // }
+
     #[test]
-    fn set_angle_revert(state: &mut State) {
-        defmt::println!("set_angle");
+    fn simple_animate(state: &mut State) {
+        defmt::println!("simple_animate");
         // Turn on channel 0 at 0
-        let mut s90 = S90::new(&mut state.i2c,
+        let mut hip_rear_left = S90::new(&mut state.i2c,
                                0x80,
                                0,
                                Degrees(90.0),
                                true).unwrap();
+
+        let mut knee_rear_left = S90::new(&mut state.i2c,
+                                         0x80,
+                                         1,
+                                         Degrees(90.0),
+                                         true).unwrap();
         loop {
-            defmt::println!("curent angle:{}",s90.read().0);
+
+            animate(
+                &mut [
+                    Move::new(&mut hip_rear_left, 45.0.degrees()),
+                    Move::new(&mut knee_rear_left, 45.0.degrees()),
+                ],
+                2000,
+                &mut state.timer,
+            );
             state.timer.delay_ms(1_0000_u16 as u32);
-            for index in 0..1 {
-                defmt::println!("index:{}",index);
-                for angle in 0..180 {
-                    s90.write(Degrees(angle as f64));
-                    state.timer.delay_ms(1_00_u16 as u32);
-                    defmt::println!("curent angle:{}",s90.read().0)
-                }
-            }
+
         }
     }
 }
