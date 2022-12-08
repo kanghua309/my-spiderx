@@ -42,7 +42,7 @@ mod tests {
 
         let mut pin = board.pins.p0_02.into_push_pull_output(gpio::Level::High);
         let _ = pin.set_low();
-        // Use the PWM peripheral to generate a waveform for the speaker
+        // Use the PWM peripheral to generate pwm waveform for the speaker
         let pwm = pwm::Pwm::new(board.PWM0);
         pwm
             // output the waveform on the speaker pin

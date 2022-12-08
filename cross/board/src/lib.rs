@@ -22,7 +22,6 @@ use microbit::{
     pac,
 };
 
-
 pub struct ServoPwms {
     pub pwm0: Pwm<microbit::hal::pac::PWM0>,
     pub pwm1: Pwm<microbit::hal::pac::PWM1>,
