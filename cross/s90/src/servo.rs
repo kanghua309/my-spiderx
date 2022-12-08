@@ -11,6 +11,7 @@ pub enum DriverError {
     UnknownError,
 }
 
+#[derive(Clone, Copy)]
 pub struct Degrees(pub f64);
 pub trait F64Ext {
     fn degrees(self) -> Degrees;

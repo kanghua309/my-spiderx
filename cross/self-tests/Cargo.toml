@@ -22,6 +22,10 @@ harness = false
 path = "tests/pca9685/lu9685_no_driver.rs"
 name = "lu9685_no_driver"
 harness = false
+[[test]]
+path = "tests/pca9685/s90_driver.rs"
+name = "lu9685_s90_driver"
+harness = false
 
 [[test]]
 name = "myboard"
