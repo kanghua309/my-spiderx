@@ -8,7 +8,7 @@
 pub mod servo;
 //pub mod i2c_s90;
 pub mod pwm_s90;
-
+pub mod i2c_s90;
 pub use servo::*;
 //pub use i2c_s90::*;
 //pub use pwm_s90::*;

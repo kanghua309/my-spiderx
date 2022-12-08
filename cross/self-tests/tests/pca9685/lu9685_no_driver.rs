@@ -45,24 +45,43 @@ mod tests {
         defmt::println!("test init");
         let board = microbit::Board::take().unwrap();
         let i2c = { twim::Twim::new(board.TWIM0, board.i2c_external.into(), FREQUENCY_A::K100) };
-        //let address = Address::default();//0b100_0000
-        // let mut pwm = Pca9685::new(i2c, 0x80).unwrap();
-        // pwm.enable().unwrap();
-        // pwm.set_prescale(100).unwrap();
-
         let timer = Timer::new(board.TIMER0);
         State {i2c,timer}
     }
 
+    // #[test]
+    // fn simple_rotate(state: &mut State) {
+    //     defmt::println!("simple_set_duty");
+    //     // Turn on channel 0 at 0
+    //     loop {
+    //         for index in 0..16 {
+    //             defmt::println!("index:{}",index);
+    //             for angle in 0..180 {
+    //                 let mut acc = [index, angle];
+    //                 state.i2c.write(0x80, &mut acc).expect("TODO: panic message");
+    //                 // let what = 0;
+    //                 // let mut res = [0;2];
+    //                 // state.i2c.read(0x80, &mut res).expect("TODO: panic message");
+    //                 // defmt::println!("value index:{}",res);
+    //                 state.timer.delay_ms(1_0_u16 as u32);
+    //             }
+    //         }
+    //     }
+    // }
     #[test]
-    fn simple_set_duty(state: &mut State) {
+    fn read_angle(state: &mut State) {
         defmt::println!("simple_set_duty");
         // Turn on channel 0 at 0
         loop {
-            for index in (0..16) {
+            for index in 0..1 {
                 defmt::println!("index:{}",index);
-                for angle in (0..250) {
+                for angle in 0..180 {
                     let mut acc = [index, angle];
+                    state.i2c.write(0x80, &mut acc).expect("TODO: panic message");
+                    let what = 0;
+                    let mut res = [0;2];
+                    state.i2c.read(0x80, &mut res).expect("TODO: panic message");
+                    defmt::println!("value index:{}",res);
                     state.timer.delay_ms(1_0_u16 as u32);
                 }
             }
