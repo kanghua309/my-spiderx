@@ -9,7 +9,8 @@ use microbit::hal::timer::Timer;
 use microbit::pac::TIMER0;
 use microbit::hal::pwm::Pwm;
 
-use s90::{F64Ext, Servo, S90};
+use s90::{F64Ext, Servo};
+use s90::pwm_s90::S90;
 
 struct State {
     s90:S90<Pwm<microbit::hal::pac::PWM0>,microbit::hal::pwm::Channel>,
@@ -24,7 +25,7 @@ mod tests {
     use microbit::{Board, pac, hal};
     use my_board::MyBoard;
     use animate::{animate, Move};
-    use s90::{F64Ext, Servo, S90};
+    use s90::{F64Ext, Servo};
     use embedded_hal::Pwm;
     use embedded_hal::prelude::_embedded_hal_blocking_delay_DelayMs;
     use microbit::{
@@ -34,6 +35,7 @@ mod tests {
             timer,
         },
     };
+    use s90::pwm_s90::S90;
     use super::State;
 
     #[init]

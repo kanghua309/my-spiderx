@@ -4,7 +4,6 @@
 
 use defmt_rtt as _;
 use panic_probe as _;
-use s90::S90;
 use animate::*;
 
 //use embedded_hal::Pwm;
@@ -24,6 +23,7 @@ use animate::*;
 use microbit::hal::pwm::Pwm;
 use microbit::hal::timer::Timer;
 use microbit::pac::TIMER0;
+use s90::pwm_s90::S90;
 
 struct State {
     //pwm: Pwm<microbit::hal::pac::PWM0>,
@@ -41,7 +41,7 @@ mod tests {
     use embedded_hal::Pwm;
     use super::State;
     use animate::{animate, Move};
-    use s90::{F64Ext, Servo, S90};
+    use s90::{F64Ext, Servo};
     use microbit::{
         hal::{
             clocks::Clocks,
@@ -55,6 +55,7 @@ mod tests {
     };
     use microbit::hal::timer::Timer;
     use libm::{exp, floorf, sin, sqrtf, ceil, floor};
+    use s90::pwm_s90::S90;
 
 
     #[init]

@@ -15,8 +15,8 @@ path = 'tests/pwm/s90_driver.rs'
 name = "pwm_s90_driver"
 harness = false
 [[test]]
-path = "tests/pca9685/pca9685_driver.rs"
-name = "pca9685_driver"
+path = "tests/pca9685/lu9685_driver.rs"
+name = "lu9685_driver"
 harness = false
 [[test]]
 path = "tests/pca9685/lu9685_no_driver.rs"
