@@ -5,14 +5,13 @@
 
 use defmt_rtt as _;
 use panic_probe as _;
-use s90::S90;
-use s90::Servo;
-use s90::Degrees;
-use s90::{F64Ext};
+use s90::pwm_s90::S90;
+
 use embedded_hal::blocking::delay;
 
 use heapless::Vec;
 use heapless::consts::*;
+use s90::{Degrees, F64Ext, Servo};
 
 pub struct Move<'a> {
     servo: &'a mut dyn Servo,

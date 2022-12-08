@@ -4,7 +4,6 @@
 
 use defmt_rtt as _;
 use panic_probe as _;
-use s90::S90;
 use animate::*;
 
 //use embedded_hal::Pwm;
@@ -42,7 +41,7 @@ mod tests {
     use embedded_hal::Pwm;
     use super::State;
     use animate::{animate, Move};
-    use s90::{F64Ext, Servo, S90};
+    use s90::{F64Ext, Servo};
     use microbit::{
         hal::{
             clocks::Clocks,
@@ -57,6 +56,7 @@ mod tests {
     use microbit::hal::timer::Timer;
     use libm::{exp, floorf, sin, sqrtf, ceil, floor};
     use core::ptr::replace;
+    use s90::pwm_s90::S90;
 
     #[init]
     fn setup() -> State {
@@ -83,7 +83,7 @@ mod tests {
         let my_pwm = unsafe {
             replace(&mut state.pwm, None)
         };
-        let mut s90 = super::S90::new(my_pwm.unwrap(),
+        let mut s90 = S90::new(my_pwm.unwrap(),
                                   pwm::Channel::C0,
                                   duty_at_0_degress,
                                   duty_at_180_degress,
@@ -121,7 +121,7 @@ mod tests {
             replace(&mut state.pwm, None)
         };
 
-        let mut s90 = super::S90::new(my_pwm.unwrap(),
+        let mut s90 = S90::new(my_pwm.unwrap(),
                                       pwm::Channel::C0,
                                       duty_at_0_degress,
                                       duty_at_180_degress,

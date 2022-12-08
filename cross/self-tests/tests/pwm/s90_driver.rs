@@ -4,7 +4,7 @@
 
 use defmt_rtt as _;
 use panic_probe as _;
-use s90::S90;
+use s90::pwm_s90::S90;
 
 use microbit::hal::pwm::Pwm;
 use microbit::hal::timer::Timer;
@@ -19,7 +19,7 @@ struct State {
 mod tests {
     use core::time::Duration;
     use defmt::{assert_eq, unwrap};
-    use s90::{F64Ext, Servo, S90};
+    use s90::{F64Ext, Servo};
     use super::State;
     use libm::{exp, floorf, sin, sqrtf, ceil, floor};
     use embedded_hal::Pwm;
@@ -37,6 +37,7 @@ mod tests {
         board,
     };
     use microbit::hal::timer::Timer;
+    use s90::pwm_s90::S90;
 
     #[init]
     fn setup() -> State  {
@@ -45,11 +46,11 @@ mod tests {
         let timer = Timer::new(board.TIMER0);
         let mut pin = board.pins.p0_02.into_push_pull_output(gpio::Level::High);
         let _ = pin.set_low();
-        // Use the PWM peripheral to generate a waveform for the speaker
+        // Use the PWM peripheral to generate pwm waveform for the speaker
         let mut pwm = pwm::Pwm::new(board.PWM0);
         pwm
             .set_output_pin(pwm::Channel::C0, pin.degrade())
-            .set_prescaler(pwm::Prescaler::Div1)
+            .set_prescaler(pwm::Prescaler::Div64)
             .set_period(Hertz(400u32))
             .enable();
         let duty_at_0_degress = (pwm.get_max_duty() as f64 * 1.0) as u16;

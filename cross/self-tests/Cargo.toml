@@ -7,26 +7,33 @@ publish = false
 
 
 [[test]]
-name = "s90_no_driver"
+path = "tests/pwm/s90_no_driver.rs"
+name = "pwm_s90_no_driver"
 harness = false
 [[test]]
-name = "s90_driver"
+path = 'tests/pwm/s90_driver.rs'
+name = "pwm_s90_driver"
 harness = false
+[[test]]
+path = "tests/pca9685/lu9685_driver.rs"
+name = "lu9685_driver"
+harness = false
+[[test]]
+path = "tests/pca9685/lu9685_no_driver.rs"
+name = "lu9685_no_driver"
+harness = false
+
+[[test]]
+name = "myboard"
+harness = false
+
 [[test]]
 name = "animate"
 harness = false
 [[test]]
 name = "animate_with_option"
 harness = false
-[[test]]
-name = "myboard"
-harness = false
-[[test]]
-name = "pca9685"
-harness = false
-[[test]]
-name = "pca_test"
-harness = false
+
 
 [dev-dependencies]
 s90 = { path = "../s90" }

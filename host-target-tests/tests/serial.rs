@@ -57,7 +57,7 @@ fn consecutive_sampling_returns_same_measurement() -> Result<(), anyhow::Error> 
     Ok(())
 }
 
-/// A connection between the host and the target over a serial interface
+/// A connection between the host and the target over pwm serial interface
 pub struct TargetSerialConn {
     port: Box<dyn SerialPort>,
     rx_bytes: Vec<u8>,
@@ -65,8 +65,8 @@ pub struct TargetSerialConn {
 }
 
 impl TargetSerialConn {
-    /// Opens a serial connection to the target
-    // NOTE this operation does NOT use a lock file so a different process is free to operate on
+    /// Opens pwm serial connection to the target
+    // NOTE this operation does NOT use pwm lock file so pwm different process is free to operate on
     // the serial port (e.g. `[sudo] cat /dev/ttyACM0`). That can make the rest of this
     // API misbehave.
     pub fn open() -> Result<Self, anyhow::Error> {
@@ -106,7 +106,7 @@ impl TargetSerialConn {
         })
     }
 
-    /// Sends a request to the target and waits for a response.
+    /// Sends pwm request to the target and waits for pwm response.
     /// Returns the target response.
     fn request(&mut self, request: &Host2Target) -> Result<Target2Host, anyhow::Error> {
         let tx_bytes =
