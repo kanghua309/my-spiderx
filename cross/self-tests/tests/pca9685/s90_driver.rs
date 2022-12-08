@@ -100,29 +100,43 @@ mod tests {
     fn simple_animate(state: &mut State) {
         defmt::println!("simple_animate");
         // Turn on channel 0 at 0
-        let mut hip_rear_left = S90::new(&mut state.i2c,
+        let mut hip_rear_left = S90::new(& state.i2c,
                                0x80,
                                0,
-                               Degrees(90.0),
-                               true).unwrap();
+                               false).unwrap();
 
-        let mut knee_rear_left = S90::new(&mut state.i2c,
+        let mut knee_rear_left = S90::new(& state.i2c,
                                          0x80,
-                                         1,
-                                         Degrees(90.0),
-                                         true).unwrap();
+                                         15,
+                                         false).unwrap();
+        animate(
+            &mut [
+                Move::new(&mut hip_rear_left, 90.0.degrees()),
+                Move::new(&mut knee_rear_left, 0.0.degrees()),
+            ],
+            5000,
+            &mut state.timer,
+        );
         loop {
-
+            defmt::println!("loop ... ");
             animate(
                 &mut [
-                    Move::new(&mut hip_rear_left, 45.0.degrees()),
-                    Move::new(&mut knee_rear_left, 45.0.degrees()),
+                    Move::new(&mut hip_rear_left, 135.0.degrees()),
+                    Move::new(&mut knee_rear_left, 90.0.degrees()),
                 ],
-                2000,
+                5000,
                 &mut state.timer,
             );
-            state.timer.delay_ms(1_0000_u16 as u32);
-
+            state.timer.delay_ms(1_000_u16 as u32);
+            animate(
+                &mut [
+                    Move::new(&mut hip_rear_left, 90.0.degrees()),
+                    Move::new(&mut knee_rear_left, 0.0.degrees()),
+                ],
+                5000,
+                &mut state.timer,
+            );
+            state.timer.delay_ms(1_000_u16 as u32);
         }
     }
 }
