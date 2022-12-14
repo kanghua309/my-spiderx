@@ -111,4 +111,7 @@ embassy-time = { git = "https://github.com/embassy-rs/embassy.git", rev = "5e94b
 name = "twin"
 #required-features = [""]
 
+[[bin]]
+name = "pwm"
+
 

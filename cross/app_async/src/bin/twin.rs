@@ -6,6 +6,8 @@
 #![no_main]
 #![feature(type_alias_impl_trait)]
 
+mod pwm;
+
 use defmt::*;
 use embassy_executor::Spawner;
 use embassy_nrf::interrupt;
