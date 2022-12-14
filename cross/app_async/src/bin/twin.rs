@@ -6,7 +6,8 @@
 #![no_main]
 #![feature(type_alias_impl_trait)]
 
-mod pwm;
+
+
 
 use defmt::*;
 use embassy_executor::Spawner;
@@ -26,15 +27,15 @@ async fn main(_spawner: Spawner) {
 
     let irq = interrupt::take!(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0);
     let mut twi = Twim::new(p.TWISPI0, irq, p.P1_00, p.P0_26, config);
-    let mut buf = [0u8; 1];
+    let mut buf = [0u8; 2];
     loop {
         for index in 0..1 {
             info!("index-:{}",index);
             for angle in 0..180 {
                 let mut acc = [index, angle];
-                unwrap!(twi.blocking_write_read(ADDRESS, &mut acc,&mut buf));
+                unwrap!(twi.blocking_write(ADDRESS, &mut acc));
                 //info!("Write: {=[u8]:x} | Read: {=[u8]:x}", acc, buf);
-                Timer::after(Duration::from_millis(10)).await;
+                Timer::after(Duration::from_millis(100)).await;
             }
         }
     }
