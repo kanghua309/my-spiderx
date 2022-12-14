@@ -33,7 +33,8 @@ async fn main(_spawner: Spawner) {
             info!("index-:{}",index);
             for angle in 0..180 {
                 let mut acc = [index, angle];
-                unwrap!(twi.blocking_write(ADDRESS, &mut acc));
+                //unwrap!(twi.blocking_write(ADDRESS, &mut acc));
+                unwrap!(twi.write(ADDRESS, &mut acc).await);
                 //info!("Write: {=[u8]:x} | Read: {=[u8]:x}", acc, buf);
                 Timer::after(Duration::from_millis(100)).await;
             }

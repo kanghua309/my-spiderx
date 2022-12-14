@@ -67,7 +67,7 @@ impl<T> Servo for S90<'_,T>
                 }
             }
         };
-
+        //TODO : very trick
         unsafe {
             let mutable_t: &mut T = &mut *(self.i2c as *const T as *mut T);
             let _ = mutable_t.write(self.address, &[self.chan, real_angle.0 as u8]);
