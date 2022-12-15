@@ -1,4 +1,5 @@
 use core::future::Future;
+use defmt::warn;
 
 #[derive(Debug)]
 pub enum DriverError {
@@ -14,7 +15,7 @@ pub trait F64Ext {
 impl F64Ext for f64 {
     fn degrees(self) -> Degrees {
         if self > 180.0 || self < 0.0 {
-            panic!("Invalid angle");
+            warn!("Danger angle");
         }
         Degrees(self)
     }

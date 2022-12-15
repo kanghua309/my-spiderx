@@ -54,5 +54,6 @@ impl<PWM,CH> Servo for S90<PWM,CH>
             self.inverted,
         );
         self.pwm.set_duty(self.chan, dg);
+        //defmt::println!("Hello, world2!---------------:{}",dg)
     }
 }
