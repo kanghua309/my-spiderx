@@ -1,10 +1,10 @@
-#![cfg_attr(not(test), no_std)]
 
+
+use core::future::Future;
 // use core::marker::PhantomData;
 use embedded_hal::Pwm;
 // use embedded_hal::digital::v2::OutputPin;
 use defmt_rtt as _;
-
 use crate::servo::{Degrees, degrees_to_duty, DriverError, duty_to_degrees, Servo};
 
 pub struct S90<PWM, CH> {
@@ -37,23 +37,22 @@ impl<PWM,CH> Servo for S90<PWM,CH>
         PWM: Pwm<Channel=CH, Duty=u16>,
         CH: Copy,
 {
-    fn read(&self) -> Degrees {
-        duty_to_degrees(
-            self.duty_at_0_degrees,
-            self.duty_at_180_degrees,
-            self.pwm.get_duty(self.chan),
-            self.inverted,
-        )
+    async fn read(&self) -> Degrees {
+            duty_to_degrees(
+                self.duty_at_0_degrees,
+                self.duty_at_180_degrees,
+                self.pwm.get_duty(self.chan),
+                self.inverted,
+            )
     }
 
-    fn write(&mut self, degrees: Degrees) -> () {
+    async fn write(&mut self, degrees: Degrees) -> () {
         let dg = degrees_to_duty(
             self.duty_at_0_degrees,
             self.duty_at_180_degrees,
             degrees,
             self.inverted,
         );
-        //defmt::println!("Hello, world!---------------:{}",dg);
-        self.pwm.set_duty(self.chan,dg)
+        self.pwm.set_duty(self.chan, dg);
     }
 }

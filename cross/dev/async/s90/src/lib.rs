@@ -1,4 +1,5 @@
 #![cfg_attr(not(test), no_std)]
+#![feature(async_fn_in_trait)]
 
 // // use core::marker::PhantomData;
 // use embedded_hal::Pwm;

@@ -1,9 +1,4 @@
-#![cfg_attr(not(test), no_std)]
-//
-// // use core::marker::PhantomData;
-// use embedded_hal::Pwm;
-// // use embedded_hal::digital::v2::OutputPin;
-// use defmt_rtt as _;
+use core::future::Future;
 
 #[derive(Debug)]
 pub enum DriverError {
@@ -25,9 +20,17 @@ impl F64Ext for f64 {
     }
 }
 
+// pub trait Servo {
+//     type ReadFuture<'m>: Future<Output = Degrees> where Self: 'm;
+//     fn read<'m>(&'m self) -> Self::ReadFuture<'m>;
+//
+//     type WriteFuture<'m>: Future<Output = ()> where Self: 'm;
+//     fn write<'m>(&'m mut self, degrees: Degrees) -> Self::WriteFuture<'m>;
+// }
+
 pub trait Servo {
-    fn read(&self) -> Degrees;
-    fn write(&mut self, degrees: Degrees) -> ();
+    async fn read<'m>(&'m self) -> Degrees;
+    async fn write<'m>(&'m mut self, degrees: Degrees) -> ();
 }
 
 pub fn degrees_to_duty(
@@ -41,9 +44,9 @@ pub fn degrees_to_duty(
     } else {
         degrees.0
     };
-    (duty_at_180_degrees as f64
+    (duty_at_0_degrees as f64
         + ((norm_degrees / 180.0)
-        * (duty_at_0_degrees - duty_at_180_degrees) as f64)) as u16
+        * (duty_at_180_degrees - duty_at_0_degrees) as f64)) as u16
 }
 
 pub fn duty_to_degrees(
@@ -52,8 +55,8 @@ pub fn duty_to_degrees(
     duty: u16,
     inverted: bool,
 ) -> Degrees {
-    let norm_degrees = ((duty_at_0_degrees - duty) as f64
-        / (duty_at_0_degrees - duty_at_180_degrees) as f64)
+    let norm_degrees = ((duty_at_180_degrees - duty) as f64
+        / (duty_at_180_degrees - duty_at_0_degrees) as f64)
         * 180.0;
     if inverted {
         Degrees(180.0 - norm_degrees)
