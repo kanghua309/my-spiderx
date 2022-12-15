@@ -47,7 +47,7 @@ mod tests {
         let board = microbit::Board::take().unwrap();
         let i2c = { twim::Twim::new(board.TWIM0, board.i2c_external.into(), FREQUENCY_A::K100) };
         //let address = Address::default();//0b100_0000
-        let mut pwm = Pca9685::new(i2c, 0x40).unwrap();
+        let mut pwm = Pca9685::new(i2c, 0x80).unwrap();
         pwm.enable().unwrap();
         pwm.set_prescale(100).unwrap();
 

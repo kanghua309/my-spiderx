@@ -79,8 +79,8 @@ mod tests {
                     let mut acc = [index, angle];
                     state.i2c.write(0x80, &mut acc).expect("TODO: panic message");
                     let what = 0;
-                    let mut res = [0;2];
-                    state.i2c.read(0x80, &mut res).expect("TODO: panic message");
+                    // let mut res = [0;2];
+                    // state.i2c.read(0x40, &mut res).expect("TODO: panic message");
                     //defmt::println!("value index:{}",res);
 
                     state.timer.delay_ms(1_0_u16 as u32);

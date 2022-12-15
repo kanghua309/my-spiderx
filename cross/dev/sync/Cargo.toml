@@ -5,7 +5,7 @@ members = [
     "animate",
     "s90",
     "self-tests",
-# "self-tests-async",
+    # "self-tests-async",
     #"../app_async",
 ]
 
