@@ -40,7 +40,6 @@ pub async fn animate<S:Servo> (moves: &mut [Move<'_,S>], speed: u32, sleep: &mut
         for i in 0..moves.len() {
             let m = &mut moves[i];
             let delta = deltas[i];
-
             let new_degrees = m.servo.read().await.0 + delta;
             let d = new_degrees.degrees();
             //defmt::println!("Hello, world2!---------------:{}:{}:{}",speed / STEP_SPEED,j,d.0);

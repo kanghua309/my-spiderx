@@ -6,7 +6,7 @@ members = [
     "s90",
     "self-tests",
     # "self-tests-async",
-    #"../app_async",
+    #"../app",
 ]
 
 [profile.dev]
