@@ -104,7 +104,7 @@ mod tests {
 
     #[test]
     fn simple_animate(state: &mut State) {
-        defmt::println!("simple_animate");
+        defmt::println!("simple_animate?");
         // Turn on channel 0 at 0
         let mut hip_front_left = S90::new(& state.i2c,
                                          0x80,
@@ -184,7 +184,7 @@ mod tests {
         //     );
         //     state.timer.delay_ms(1_000_u16 as u32);
         // }
-        let speed = 5000;
+        let speed = 2000;
         for _ in 0..100 {
             animate(
                 &mut [
