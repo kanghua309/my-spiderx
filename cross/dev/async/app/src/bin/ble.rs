@@ -11,8 +11,12 @@ use core::mem;
 
 use defmt::{info, *};
 use embassy_executor::Spawner;
+use embassy_nrf::interrupt::Priority;
+use embassy_nrf::{interrupt, twim};
+use embassy_nrf::twim::Twim;
 use nrf_softdevice::ble::{gatt_server, peripheral};
 use nrf_softdevice::{raw, Softdevice};
+use embassy_nrf::interrupt::InterruptExt;
 
 #[embassy_executor::task]
 async fn softdevice_task(sd: &'static Softdevice) -> ! {
@@ -40,6 +44,16 @@ struct Server {
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     info!("Hello World!");
+    let mut config = embassy_nrf::config::Config::default();
+    config.gpiote_interrupt_priority = Priority::P2;
+    config.time_interrupt_priority = Priority::P2;
+    let p = embassy_nrf::init(config);
+    info!("Initializing TWI...");
+    let config = twim::Config::default();
+    let irq = interrupt::take!(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0);
+    irq.set_priority(interrupt::Priority::P2);
+    let mut twi = Twim::new(p.TWISPI0, irq, p.P1_00, p.P0_26, config);
+    info!("Initializing TWI...");
 
     let config = nrf_softdevice::Config {
         clock: Some(raw::nrf_clock_lf_cfg_t {

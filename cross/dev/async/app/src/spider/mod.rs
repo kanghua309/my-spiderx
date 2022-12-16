@@ -54,15 +54,14 @@ impl<'a,T> Spider<'a,T> where
         self.hip_front_right.write(Degrees(45.0)).await;
         self.hip_rear_left.write(Degrees(45.0)).await;
         self.hip_rear_right.write(Degrees(45.0)).await;
-        self.knee_front_left.write(Degrees(135.0)).await;
-        self.knee_front_right.write(Degrees(135.0)).await;
-        self.knee_rear_left.write(Degrees(135.0)).await;
-        self.knee_rear_right.write(Degrees(135.0)).await;
+        self.knee_front_left.write(Degrees(165.0)).await;
+        self.knee_front_right.write(Degrees(165.0)).await;
+        self.knee_rear_left.write(Degrees(165.0)).await;
+        self.knee_rear_right.write(Degrees(165.0)).await;
     }
 
     pub async fn walk_forward(&mut self, sleep: &mut Delay, steps: u32, speed: u32) {
         walk(
-
             (&mut self.knee_front_left, &mut self.knee_rear_right, ),
             (&mut self.knee_rear_left, &mut self.knee_front_right),
             (&mut self.hip_front_left,&mut self.hip_rear_right),

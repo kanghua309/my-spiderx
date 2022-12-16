@@ -16,6 +16,8 @@ use {defmt_rtt as _, panic_probe as _};
 use defmt::{info, *};
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::channel::Channel;
+use embassy_nrf::interrupt::{InterruptExt, Priority};
+
 use nrf_softdevice::ble::{gatt_server, peripheral};
 use nrf_softdevice::{raw, Softdevice};
 use crate::spider::Spider;
@@ -30,12 +32,13 @@ static CHANNEL: Channel<ThreadModeRawMutex, CrawlAction, 1> = Channel::new();
 #[nrf_softdevice::gatt_service(uuid = "9e7312e0-2354-11eb-9f10-fbc30a62cf38")]
 struct FooService {
     #[characteristic(uuid = "9e7312e0-2354-11eb-9f10-fbc30a63cf38", read, write, notify, indicate)]
-    foo: u16,
+    foo: u8,
 }
 #[nrf_softdevice::gatt_server]
 struct Server {
     foo: FooService,
 }
+
 
 #[embassy_executor::task]
 async fn softdevice_task(sd: &'static Softdevice) -> ! {
@@ -43,68 +46,7 @@ async fn softdevice_task(sd: &'static Softdevice) -> ! {
 }
 
 #[embassy_executor::task]
-async fn spider_receive_task() -> ! {
-    let p = embassy_nrf::init(Default::default());
-    info!("Initializing TWI...");
-    let config = twim::Config::default();
-    let irq = interrupt::take!(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0);
-    let mut twi = Twim::new(p.TWISPI0, irq, p.P1_00, p.P0_26, config);
-    let mut spider= Spider::new(&twi);
-    spider.init().await;
-    info!("Spider Init Over... ");
-    info!("Spider Wait Cmd");
-    loop {
-        match CHANNEL.recv().await {
-            CrawlAction::front => {
-                info!("Get Cmd - Front");
-                spider.walk_forward(&mut Delay,1,1000).await;
-            },
-            CrawlAction::back =>  {
-                info!("Get Cmd - Back");
-                spider.walk_backward(&mut Delay,1,1000).await;
-            },
-        }
-    }
-}
-
-#[embassy_executor::main]
-async fn main(spawner: Spawner) {
-    let config = nrf_softdevice::Config {
-        clock: Some(raw::nrf_clock_lf_cfg_t {
-            source: raw::NRF_CLOCK_LF_SRC_RC as u8,
-            rc_ctiv: 4,
-            rc_temp_ctiv: 2,
-            accuracy: 7,
-        }),
-        conn_gap: Some(raw::ble_gap_conn_cfg_t {
-            conn_count: 6,
-            event_length: 24,
-        }),
-        conn_gatt: Some(raw::ble_gatt_conn_cfg_t { att_mtu: 256 }),
-        gatts_attr_tab_size: Some(raw::ble_gatts_cfg_attr_tab_size_t { attr_tab_size: 32768 }),
-        gap_role_count: Some(raw::ble_gap_cfg_role_count_t {
-            adv_set_count: 1,
-            periph_role_count: 3,
-            central_role_count: 3,
-            central_sec_count: 0,
-            _bitfield_1: raw::ble_gap_cfg_role_count_t::new_bitfield_1(0),
-        }),
-        gap_device_name: Some(raw::ble_gap_cfg_device_name_t {
-            p_value: b"SpiderCtrl" as *const u8 as _,
-            current_len: 10,
-            max_len: 10,
-            write_perm: unsafe { mem::zeroed() },
-            _bitfield_1: raw::ble_gap_cfg_device_name_t::new_bitfield_1(raw::BLE_GATTS_VLOC_STACK as u8),
-        }),
-        ..Default::default()
-    };
-    let sd = Softdevice::enable(&config);
-    let server = unwrap!(Server::new(sd));
-    unwrap!(spawner.spawn(softdevice_task(sd)));
-    info!("spawn soft-device over");
-    unwrap!(spawner.spawn(spider_receive_task()));
-    info!("spawn spider-task over");
-
+async fn gatt_ctrl_server(sd: &'static Softdevice, server: Server){
     #[rustfmt::skip]
         let adv_data = &[
         0x02, 0x01, raw::BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE as u8,
@@ -136,6 +78,72 @@ async fn main(spawner: Spawner) {
             .await;
         if let Err(e) = res {
             info!("gatt_server run exited with error: {:?}", e);
+        }
+    }
+}
+
+
+#[embassy_executor::main]
+async fn main(spawner: Spawner) {
+    let mut config = embassy_nrf::config::Config::default();
+    config.gpiote_interrupt_priority = Priority::P2;
+    config.time_interrupt_priority = Priority::P2;
+    let p = embassy_nrf::init(config);
+    info!("Initializing Nrf...");
+    let config = twim::Config::default();
+    let irq = interrupt::take!(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0);
+    irq.set_priority(interrupt::Priority::P2);
+    let mut twi = Twim::new(p.TWISPI0, irq, p.P1_00, p.P0_26, config);
+    let mut spider= Spider::new(&twi);
+    info!("Spider New Over...");
+    let config = nrf_softdevice::Config {
+        clock: Some(raw::nrf_clock_lf_cfg_t {
+            source: raw::NRF_CLOCK_LF_SRC_RC as u8,
+            rc_ctiv: 4,
+            rc_temp_ctiv: 2,
+            accuracy: 7,
+        }),
+        conn_gap: Some(raw::ble_gap_conn_cfg_t {
+            conn_count: 3,
+            event_length: 24,
+        }),
+        conn_gatt: Some(raw::ble_gatt_conn_cfg_t { att_mtu: 256 }),
+        gatts_attr_tab_size: Some(raw::ble_gatts_cfg_attr_tab_size_t { attr_tab_size: 32768 }),
+        gap_role_count: Some(raw::ble_gap_cfg_role_count_t {
+            adv_set_count: 1,
+            periph_role_count: 3,
+            central_role_count: 3,
+            central_sec_count: 0,
+            _bitfield_1: raw::ble_gap_cfg_role_count_t::new_bitfield_1(0),
+        }),
+        gap_device_name: Some(raw::ble_gap_cfg_device_name_t {
+            p_value: b"SpiderCtrl" as *const u8 as _,
+            current_len: 10,
+            max_len: 10,
+            write_perm: unsafe { mem::zeroed() },
+            _bitfield_1: raw::ble_gap_cfg_device_name_t::new_bitfield_1(raw::BLE_GATTS_VLOC_STACK as u8),
+        }),
+        ..Default::default()
+    };
+    let sd = Softdevice::enable(&config);
+    let server = unwrap!(Server::new(sd));
+    unwrap!(spawner.spawn(softdevice_task(sd)));
+    info!("spawn soft-device over");
+    unwrap!(spawner.spawn(gatt_ctrl_server(sd,server)));
+    info!("spawn gatt-ctrl-server over");
+    spider.init().await;
+    info!("spider init over");
+    info!("began to receive ctrl cmd");
+    loop {
+        match CHANNEL.recv().await {
+            CrawlAction::front => {
+                info!("Get Cmd - Front");
+                spider.walk_forward(&mut Delay,1,1000).await;
+            },
+            CrawlAction::back =>  {
+                info!("Get Cmd - Back");
+                spider.walk_backward(&mut Delay,1,1000).await;
+            },
         }
     }
 }

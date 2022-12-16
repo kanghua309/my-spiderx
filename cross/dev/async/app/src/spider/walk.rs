@@ -32,8 +32,8 @@ pub async fn walk<S: Servo>(
         ).await;
         animate(
             &mut [
-                Move::new(knees1.0, 165.0_f64.degrees()),
-                Move::new(knees1.1, 165.0_f64.degrees()),
+                Move::new(knees1.0, 180.0_f64.degrees()),
+                Move::new(knees1.1, 180.0_f64.degrees()),
             ],
             speed,
             sleep,
@@ -48,8 +48,8 @@ pub async fn walk<S: Servo>(
         ).await;
         animate(
             &mut [
-                Move::new(knees1.0, 135.0_f64.degrees()),
-                Move::new(knees1.1, 135.0_f64.degrees()),
+                Move::new(knees1.0, 165.0_f64.degrees()),
+                Move::new(knees1.1, 165.0_f64.degrees()),
             ],
             speed,
             sleep,
@@ -74,8 +74,8 @@ pub async fn walk<S: Servo>(
 
         animate(
             &mut [
-                Move::new(knees2.0, 165.0_f64.degrees()),
-                Move::new(knees2.1, 165.0_f64.degrees()),
+                Move::new(knees2.0, 180.0_f64.degrees()),
+                Move::new(knees2.1, 180.0_f64.degrees()),
             ],
             speed,
             sleep,
@@ -90,8 +90,8 @@ pub async fn walk<S: Servo>(
         ).await;
         animate(
             &mut [
-                Move::new(knees2.0, 135.0_f64.degrees()),
-                Move::new(knees2.1, 135.0_f64.degrees()),
+                Move::new(knees2.0, 165.0_f64.degrees()),
+                Move::new(knees2.1, 165.0_f64.degrees()),
             ],
             speed,
             sleep,
