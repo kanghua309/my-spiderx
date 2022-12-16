@@ -148,22 +148,18 @@ embassy-time = { git = "https://github.com/embassy-rs/embassy.git", rev = "5e94b
 [[bin]]
 name = "twin"
 #required-features = [""]
-#
-#[[bin]]
-#name = "pwm"
-
+[[bin]]
+name = "pwm"
 [[bin]]
 name = "ble"
-
-#[[bin]]
-#name = "test_pwm_s90"
-#
-#[[bin]]
-#name = "test_i2c_s90"
-
+[[bin]]
+name = "test_pwm_s90"
+[[bin]]
+name = "test_i2c_s90"
 [[bin]]
 name = "test_animate"
-
+[[bin]]
+name = "test_spider"
 
 [[bin]]
 name = "app"

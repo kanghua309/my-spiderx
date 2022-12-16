@@ -1,7 +1,7 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
 runner = "probe-run --chip nRF52833_xxAA"
 rustflags = [
-  "-C", "linker=flip-link",
+  # "-C", "linker=flip-link", #ble 似乎不能打开
   # Code-size optimizations.
   #  "-Z", "trap-unreachable=no",
   #  "-C", "inline-threshold=5",
